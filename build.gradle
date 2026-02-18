@@ -1,0 +1,60 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.mario'
+version = '1.0.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.boot:spring-boot-dependencies:3.3.4'
+    }
+}
+
+dependencies {
+    // Spring Boot Mail (transitive for consumers)
+    api 'org.springframework.boot:spring-boot-starter-mail'
+
+    // Spring Boot Autoconfiguration
+    implementation 'org.springframework.boot:spring-boot-autoconfigure'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    // FreeMarker template engine
+    implementation 'org.freemarker:freemarker:2.3.32'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // SLF4J for logging
+    implementation 'org.slf4j:slf4j-api'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId = 'com.mario'
+            artifactId = 'email-service'
+            version = '1.0.0'
+        }
+    }
+}
